@@ -1,127 +1,379 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Sweet Wheels — Spin to Win</title>
-<meta name="description" content="Spin to win a daily Sweet Wheels treat. Pastel clay style, 5 prizes, fair odds." />
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
-<style>
-:root{
-  --ink:#3b3a40; --muted:#8E90A0; --bg:#FFF7EF; --rim:#ffffff; --line:rgba(30,33,36,.10);
-  --straw:#F8B8C9; --mint:#BFEEDF; --blue:#BFD6FF; --lav:#DCC6FF; --lemon:#FFE3A1;
-}
-*{box-sizing:border-box}
-html,body{margin:0;background:linear-gradient(120deg,var(--bg),#fff);color:var(--ink);font-family:Inter,system-ui,Arial,sans-serif}
-h1{font-family:Fredoka,system-ui,Arial,sans-serif;font-size:clamp(1.6rem,4vw,2.4rem);margin:0 0 .5rem}
-.wrap{max-width:900px;margin:0 auto;padding:clamp(14px,2vw,22px)}
-.card{background:#fff;border:1px solid var(--line);border-radius:22px;padding:14px 16px;
-  box-shadow:0 18px 40px rgba(32,33,36,.10), inset 0 2px 0 rgba(255,255,255,.85)}
-.btn{display:inline-flex;align-items:center;gap:.5rem;background:var(--straw);border:1px solid var(--line);
-  border-radius:18px;padding:.7rem 1rem;font-weight:700;text-decoration:none;color:inherit;box-shadow:0 6px 18px rgba(239,154,174,.18), inset 0 2px 0 rgba(255,255,255,.85)}
-.btn:disabled{opacity:.6;cursor:not-allowed}
-.muted{color:var(--muted)} .small{font-size:.92rem}
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Sweet Wheels — Dessert Truck (Knoxville)</title>
+  <meta name="description" content="Treat Yourself — Sweet Wheels Desserts. Today’s location, menu highlights, and always-winner Sweet Deals spinner." />
 
-/* Layout */
-.grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;align-items:center}
-@media (max-width:900px){ .grid{grid-template-columns:1fr} }
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
 
-/* Spinner layout */
-.spinner{display:grid;place-items:center;gap:12px}
-.stage{position:relative;display:grid;place-items:center;padding:18px}
-.rim{position:absolute;inset:0;border-radius:28px;
-     box-shadow: 0 26px 60px rgba(32,33,36,.14), inset 0 8px 0 rgba(255,255,255,.85);
-     background:radial-gradient(120px 80px at 50% 40%,#fff 0%, #fff 50%, rgba(0,0,0,.02) 100%);}
+  <style>
+  :root{
+    --ink:#3B3A40; --muted:#8E90A0;
+    --cream:#FFF7EF; --lemon:#FFE3A1; --straw:#F8B8C9;
+    --mint:#BFEEDF; --blue:#BFD6FF; --lav:#DCC6FF;
+    --panel:#ffffff; --line:rgba(30,33,36,.10);
+    --ring:rgba(191,214,255,.55);
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;background:linear-gradient(120deg,var(--cream),#fff);color:var(--ink);font-family:Inter,system-ui,Segoe UI,Arial,sans-serif}
+  h1,h2,h3{font-family:Fredoka,system-ui,Arial,sans-serif;margin:.2rem 0 .6rem}
+  h1{font-size:clamp(1.8rem,3.2vw,3rem);line-height:1.1}
+  h2{font-size:clamp(1.3rem,2.1vw,1.8rem)}
+  h3{font-size:1.1rem}
+  p{line-height:1.5}
+  a{color:inherit}
+  .wrap{max-width:1100px;margin:0 auto;padding:clamp(14px,2vw,22px)}
+  .section{padding:clamp(18px,3.2vw,40px) 0}
+  .sub{color:var(--muted)}
+  .accent{color:#5b5b66}
 
-.canvas-wrap{ position:relative; display:inline-block; border-radius:50%;
-  padding:14px; background:var(--rim);
-  box-shadow:0 18px 38px rgba(0,0,0,.12), inset 0 4px 0 rgba(255,255,255,.85);
-  width:min(420px, 80vw); /* NEW: fluid width */
-}
-#wheel{ display:block; width:100%; height:auto; } /* let JS set real pixels */
+  /* Skip link */
+  .skip{position:absolute;left:-9999px;top:0;background:#fff;padding:.4rem .6rem;border-radius:8px;z-index:999}
+  .skip:focus{left:10px;box-shadow:0 6px 16px rgba(0,0,0,.12)}
 
-  
-/* Canvas gets a soft “clay” frame */
-.canvas-wrap{position:relative;display:inline-block;border-radius:50%;padding:14px;background:var(--rim);
-  box-shadow:0 18px 38px rgba(0,0,0,.12), inset 0 4px 0 rgba(255,255,255,.85)}
-#wheel{display:block}
+  /* Buttons */
+  .btn{
+    background:var(--straw);
+    border:1px solid var(--line);
+    border-radius:18px;
+    padding:.7rem 1rem;
+    box-shadow: 0 6px 18px rgba(239,154,174,.18), inset 0 2px 0 rgba(255,255,255,.85);
+    text-decoration:none;display:inline-flex;gap:.5rem;align-items:center;font-weight:700
+  }
+  .btn:hover{filter:saturate(1.02);transform:translateY(-1px)}
+  .btn.line{background:#fff}
+  .btn.mini{padding:.5rem .8rem;border-radius:14px}
+  .mt{margin-top:1rem}
+  .muted{color:var(--muted)}
+  .small{font-size:.9rem}
 
-/* Top pointer */
-.pointer{position:absolute;top:-14px;left:50%;transform:translateX(-50%);width:0;height:0;
-  border-left:14px solid transparent;border-right:14px solid transparent;border-bottom:22px solid #ffb2c4;
-  filter:drop-shadow(0 6px 10px rgba(0,0,0,.12))}
-.controls{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
-.coupon{font-family:ui-monospace,Menlo,Consolas,monospace;background:#f7f7f9;border:1px dashed #cfcfd8;border-radius:10px;padding:6px 8px;display:inline-block;cursor:pointer}
-</style>
+  /* Topbar */
+  .topbar{position:sticky;top:0;background:rgba(255,255,255,.8);backdrop-filter:blur(8px);border-bottom:1px solid var(--line);z-index:50}
+  .topbar .wrap{display:flex;align-items:center;justify-content:space-between;gap:12px}
+  .pill{background:#fff;border:1px solid var(--line);border-radius:999px;padding:.35rem .7rem;box-shadow:0 4px 16px rgba(0,0,0,.06)}
+  .mini-nav a{margin-left:8px;text-decoration:none;padding:.2rem .4rem;border-radius:8px}
+  .mini-nav a:hover{background:rgba(0,0,0,.04)}
+  details.hours{display:inline-block;position:relative;margin-right:8px}
+  details.hours summary{list-style:none;cursor:pointer;padding:.2rem .4rem;border-radius:8px}
+  details.hours[open] summary{background:rgba(0,0,0,.04)}
+  .hours-card{display:none;position:absolute;right:0;top:calc(100% + 6px);min-width:220px;z-index:80}
+  details.hours[open] .hours-card{display:block}
+  .hours-list{margin:0;padding:.2rem .2rem .2rem 1.2rem}
+  .hours-list li{line-height:1.6}
+
+  /* Hero */
+  .hero{padding:28px 0 8px}
+  .hero-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:26px;align-items:center}
+  .hero-art{display:grid;place-items:center}
+  .truck{max-width:420px;width:100%;filter: drop-shadow(0 16px 30px rgba(40,30,20,.12)); transform:scale(1.08)}
+  .cta-row{display:flex;gap:12px;flex-wrap:wrap}
+
+  /* Cards / Menu */
+  .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px;list-style:none;padding:0;margin:0}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:22px;padding:14px 16px;box-shadow:
+    0 18px 40px rgba(32,33,36,.10), inset 0 2px 0 rgba(255,255,255,.85)}
+  .card h3{margin:0 0 .35rem}
+  .card p{margin:.25rem 0}
+  .card .price{display:flex;align-items:center;gap:.4rem;margin-top:.35rem;font-weight:700}
+  .badge{background:var(--mint);border:1px solid #9FD7C6;border-radius:10px;padding:2px 8px;font-weight:700}
+  .badge.warn{background:#FFE3E9;border-color:#F4C2CF}
+
+  /* Deals / Spinner (Winwheel) */
+  .deals-grid{display:grid;grid-template-columns:1.1fr .9fr;gap:22px;align-items:center}
+  .spinner{display:grid;place-items:center;gap:12px}
+  .stage{position:relative;display:grid;place-items:center;padding:18px}
+  .rim{position:absolute;inset:0;border-radius:28px;
+       box-shadow: 0 26px 60px rgba(32,33,36,.14), inset 0 8px 0 rgba(255,255,255,.85);
+       background:radial-gradient(120px 80px at 50% 40%,#fff 0%, #fff 50%, rgba(0,0,0,.02) 100%)}
+  .canvas-wrap{position:relative;display:inline-block;border-radius:50%;
+    padding:14px;background:#fff;
+    box-shadow:0 18px 38px rgba(0,0,0,.12), inset 0 4px 0 rgba(255,255,255,.85);
+    width:min(420px, 80vw)}
+  #wheel{display:block;width:100%;height:auto}
+  .pointer{position:absolute;top:-14px;left:50%;transform:translateX(-50%);width:0;height:0;
+    border-left:14px solid transparent;border-right:14px solid transparent;border-bottom:22px solid #ffb2c4;
+    filter:drop-shadow(0 6px 10px rgba(0,0,0,.12))}
+  .controls{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
+  .coupon{font-family:ui-monospace,Menlo,Consolas,monospace;background:#f7f7f9;border:1px dashed #cfcfd8;border-radius:10px;padding:6px 8px;display:inline-block;cursor:pointer}
+
+  /* Forms / IG */
+  .form input,.form textarea{width:100%;padding:.7rem;border:1px solid var(--line);border-radius:14px;background:#fff;box-shadow:inset 0 2px 0 rgba(255,255,255,.8)}
+  .form label{display:grid;gap:6px;margin-bottom:10px}
+  .form input:focus,.form textarea:focus{outline:2px solid var(--ring);outline-offset:2px}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  .quote{margin:0 0 12px}
+  .ig{list-style:none;padding:0;margin:6px 0;display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+  .ig .ph{background:linear-gradient(120deg,#fff,var(--cream));border:1px solid var(--line);border-radius:18px;aspect-ratio:1;box-shadow:inset 0 2px 0 rgba(255,255,255,.8)}
+
+  /* Footer + Sticky CTA */
+  .footer{border-top:1px solid var(--line);padding:18px 0;background:#fff}
+  .sticky-cta{position:sticky;bottom:0;display:none;gap:8px;justify-content:space-around;padding:8px;
+    padding-bottom:calc(8px + env(safe-area-inset-bottom));
+    background:rgba(255,255,255,.85);backdrop-filter:blur(8px);border-top:1px solid var(--line);z-index:60}
+  .sticky-cta .btn{box-shadow:none}
+
+  /* Responsive */
+  @media (max-width: 900px){
+    .hero-grid{grid-template-columns:1fr}
+    .deals-grid{grid-template-columns:1fr}
+    .grid2{grid-template-columns:1fr}
+    .sticky-cta{display:flex}
+  }
+
+  /* Focus */
+  :focus-visible{outline:3px solid var(--ring);outline-offset:2px}
+  </style>
 </head>
 <body>
-  <main class="wrap">
-    <h1>Sweet Wheels — Sweet Deals</h1>
-    <p class="muted">One spin per guest per day. Show your win screen at checkout. Valid today only.</p>
+<a class="skip" href="#menu">Skip to content</a>
 
-    <section class="grid">
-      <div class="spinner card" aria-live="polite">
-        <div class="stage">
-          <div class="rim" aria-hidden="true"></div>
-          <div class="canvas-wrap">
-            <span class="pointer" aria-hidden="true"></span>
-            <canvas id="wheel" width="420" height="420" role="img" aria-label="Prize wheel: spin to reveal your deal"></canvas>
+<section id="app" class="site">
+  <!-- Top / Utility -->
+  <header class="topbar" role="banner">
+    <div class="wrap">
+      <span class="pill" id="today-pill" aria-live="polite">Today: …</span>
+
+      <nav class="mini-nav" aria-label="Utility">
+        <details class="hours" id="hoursDrop">
+          <summary aria-controls="hoursList">Hours</summary>
+          <div class="card hours-card">
+            <ul id="hoursList" class="hours-list"></ul>
           </div>
+        </details>
+
+        <a id="orderLink" href="#order" class="btn mini">Order Ahead</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Hero -->
+  <section class="hero" aria-labelledby="hero-title">
+    <div class="wrap hero-grid">
+      <div class="hero-copy">
+        <h1 id="hero-title">Treat Yourself — <span class="accent">Sweet Wheels Desserts</span></h1>
+        <p class="sub">Light, bright, and fluffy treats on wheels. 🍰</p>
+        <div class="cta-row">
+          <a class="btn" href="#find">Find Today’s Location</a>
+          <a class="btn line" href="#order">Order Ahead</a>
         </div>
-        <div class="controls">
-          <button id="spinBtn" class="btn">Spin</button>
-          <button id="resetBtn" class="btn" type="button">Reset (dev)</button>
-        </div>
-        <p id="spinNote" class="muted small"></p>
       </div>
 
-      <aside class="card">
-        <h2 style="margin-top:0">Your prize</h2>
+      <!-- Simple pastel truck SVG (swap for clay render anytime) -->
+      <div class="hero-art" role="img" aria-label="Cute dessert truck illustration">
+        <svg viewBox="0 0 360 210" class="truck" aria-hidden="true">
+          <defs>
+            <linearGradient id="g1" x1="0" x2="0" y1="0" y2="1">
+              <stop offset="0%" stop-color="#FFF7EF"/>
+              <stop offset="100%" stop-color="#FFE3A1"/>
+            </linearGradient>
+          </defs>
+          <rect x="10" y="70" rx="18" ry="18" width="260" height="100" fill="url(#g1)" stroke="#E7D9C5"/>
+          <rect x="210" y="40" rx="12" ry="12" width="140" height="130" fill="#BFEEDF" stroke="#9FD7C6"/>
+          <rect x="230" y="60" rx="8" ry="8" width="50" height="40" fill="#BFD6FF" stroke="#9FB7E8"/>
+          <circle cx="80" cy="180" r="26" fill="#F8B8C9" stroke="#E09CAF"/>
+          <circle cx="250" cy="180" r="26" fill="#F8B8C9" stroke="#E09CAF"/>
+          <rect x="40" y="90" width="120" height="40" rx="6" fill="#FFFFFF" opacity=".75" stroke="#E6E6E6"/>
+          <rect x="40" y="86" width="120" height="10" rx="6" fill="#F8B8C9"/>
+          <rect x="160" y="92" width="40" height="36" rx="6" fill="#BFD6FF" opacity=".85" />
+        </svg>
+      </div>
+    </div>
+  </section>
+
+  <!-- Menu Highlights -->
+  <section id="menu" class="section" aria-labelledby="menu-title">
+    <div class="wrap">
+      <h2 id="menu-title">Menu Highlights</h2>
+      <ul class="cards">
+        <li class="card">
+          <h3>Strawberry Shortcake Cup</h3>
+          <p>Buttery crumble, fresh berries, whipped cream.</p>
+          <p class="price">$6.50 <span class="badge">V</span></p>
+        </li>
+        <li class="card">
+          <h3>Birthday-Cake Soft-Serve</h3>
+          <p>Sprinkles & vanilla-confetti swirl.</p>
+          <p class="price">$4.75 <span class="badge">GF</span></p>
+        </li>
+        <li class="card">
+          <h3>Triple-Chocolate Brownie</h3>
+          <p>Fudgey center, cocoa dust.</p>
+          <p class="price">$3.95 <span class="badge warn">Nuts</span></p>
+        </li>
+        <li class="card">
+          <h3>Lemon Bar</h3>
+          <p>Tart curd, powdered sugar.</p>
+          <p class="price">$3.50</p>
+        </li>
+        <li class="card">
+          <h3>Macaron 3-pack</h3>
+          <p>Rotating flavors.</p>
+          <p class="price">$5.50</p>
+        </li>
+        <li class="card">
+          <h3>Cold-Brew Float</h3>
+          <p>Creamy soft-serve + bold brew.</p>
+          <p class="price">$5.75 <span class="badge">DF</span></p>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- Spinner / Promo (Winwheel.js) -->
+  <section id="deals" class="section" aria-labelledby="deals-title">
+    <div class="wrap deals-grid">
+      <div>
+        <h2 id="deals-title">Sweet Wheels, Sweet Deals</h2>
+        <p class="muted">One spin per guest per day. Show your win screen at checkout. Not stackable; valid today only.</p>
+
+        <div class="spinner card" aria-live="polite">
+          <div class="stage">
+            <div class="rim" aria-hidden="true"></div>
+            <div class="canvas-wrap">
+              <span class="pointer" aria-hidden="true"></span>
+              <canvas id="wheel" width="420" height="420" role="img" aria-label="Prize wheel: spin to reveal your deal"></canvas>
+            </div>
+          </div>
+          <div class="controls">
+            <button id="spinBtn" class="btn">Spin</button>
+            <button id="resetBtn" class="btn" type="button">Reset (dev)</button>
+          </div>
+          <p id="spinNote" class="muted small"></p>
+        </div>
+      </div>
+
+      <aside class="win-card card" aria-live="polite">
+        <h3 style="margin-top:0">Your prize</h3>
         <p id="winText" class="muted">Spin to see what you get!</p>
         <p id="winCode" class="coupon" title="Click to copy" hidden>Code: SWEET-00000</p>
       </aside>
-    </section>
-  </main>
+    </div>
+  </section>
 
-  <!-- GSAP (TweenMax 2.x) is required by Winwheel.js -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/2.1.3/TweenMax.min.js" integrity="sha512-58H8hNtFZgJrFGh8VxBz4C4N9GJ2z8Qh6u2X6xU5iBNkWzA8FcJ6r9tWkGNT2l5m6ZzC2Kic4qK2C6cYcZ7Yxw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-  <!-- Winwheel.js (classic build) -->
-  <script src="https://cdn.jsdelivr.net/npm/winwheel@1.0.1/dist/Winwheel.min.js"></script>
+  <!-- Quick Questions -->
+  <section id="contact" class="section" aria-labelledby="qq-title">
+    <div class="wrap grid2">
+      <div>
+        <h2 id="qq-title">Quick Questions</h2>
+        <p class="muted">Ask us anything—preorders, allergies, flavors today.</p>
+        <form id="qq-form" class="card form" novalidate>
+          <label> Name
+            <input required name="name" autocomplete="name" />
+          </label>
+          <label> Email or Phone
+            <input required name="contact" autocomplete="email" inputmode="email" />
+          </label>
+          <label> Message
+            <textarea required name="message" rows="3" placeholder="Your question…"></textarea>
+          </label>
+          <button class="btn" type="submit">Send</button>
+          <p id="qq-status" class="muted small" role="status" aria-live="polite"></p>
+        </form>
+      </div>
 
-  <script>
-let prizes = [], codePrefixes = [];
+      <div>
+        <h2 id="reviews">Reviews</h2>
+        <blockquote class="card quote">“The lemon bars are sunshine!” — Mia ⭐⭐⭐⭐⭐</blockquote>
+        <blockquote class="card quote">“Best brownie in town.” — Jay ⭐⭐⭐⭐⭐</blockquote>
 
-async function loadPrizes(){
-  try{
-    const res = await fetch('./prizes.json', {cache:'no-cache'}); // same-origin on GH Pages
-    const data = await res.json();
-    prizes = data.prizes.flatMap(p => Array(p.weight).fill(p.label)); // weights -> array
-    codePrefixes = data.prizes.map(p => p.codePrefix);
-  }catch(e){
-    prizes = ["10% OFF","Free Topping","$1 Off Drink","BOGO 50%","Mystery Sweet"];
-    codePrefixes = ["TEN","TOP","D1","B50","MYS"];
-  }
-}
-function couponCode(prefix="SWEET"){
-  const s="ABCDEFGHJKLMNPQRSTUVWXYZ23456789"; let out = prefix+"-";
-  for(let i=0;i<5;i++) out += s[Math.floor(Math.random()*s.length)];
-  return out;
-} (async function init(){ await loadPrizes(); buildWheel(); /* then wire listeners */ })();
+        <h3 class="mt">Instagram</h3>
+        <ul class="ig">
+          <li class="ph" aria-label="Dessert photo placeholder" role="img"></li>
+          <li class="ph" aria-label="Dessert photo placeholder" role="img"></li>
+          <li class="ph" aria-label="Dessert photo placeholder" role="img"></li>
+          <li class="ph" aria-label="Dessert photo placeholder" role="img"></li>
+          <li class="ph" aria-label="Dessert photo placeholder" role="img"></li>
+          <li class="ph" aria-label="Dessert photo placeholder" role="img"></li>
+        </ul>
+        <p class="muted small">Follow us: @sweetwheels • Facebook • Foursquare</p>
+      </div>
+    </div>
+  </section>
 
-function announcePrize(){
-  const seg = theWheel.getIndicatedSegment();
-  winText.textContent = `🎉 ${seg.text}`;
-  const prefixMap = { "10% OFF":"TEN","Free Topping":"TOP","$1 Off Drink":"D1","BOGO 50%":"B50","Mystery Sweet":"MYS" };
-  winCode.textContent = "Code: " + couponCode(prefixMap[seg.text] || "SWEET");
-  winCode.hidden = false;
-  setSpun(); disableSpinUI();
-}
+  <!-- FAQ -->
+  <section id="faq" class="section" aria-labelledby="faq-title">
+    <div class="wrap">
+      <h2 id="faq-title">FAQ</h2>
+      <details class="card"><summary>Allergens</summary><p>Badges show GF, DF, V, and Nuts. Ask us anytime.</p></details>
+      <details class="card"><summary>Payments</summary><p>Cards, tap-to-pay, and cash.</p></details>
+      <details class="card" id="hours"><summary>Weather & Hours</summary><p>We post today’s hours and location up top by 10am.</p></details>
+    </div>
+  </section>
 
-  // 2) segments
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="wrap">
+      <p>© <span id="year"></span> Sweet Wheels. Made with 💗 & sugar.</p>
+      <nav class="mini-nav">
+        <a href="#">Privacy</a><a href="#">Permits</a><a href="#contact">Contact</a>
+      </nav>
+    </div>
+  </footer>
+
+  <!-- Sticky Mobile CTA -->
+  <nav class="sticky-cta" aria-label="Primary">
+    <a href="#find" class="btn mini">Find Us</a>
+    <a href="#menu" class="btn mini line">Menu</a>
+    <a href="#order" class="btn mini">Order</a>
+  </nav>
+</section>
+
+<!-- GSAP (TweenMax 2.x) required by Winwheel -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/2.1.3/TweenMax.min.js" integrity="sha512-58H8hNtFZgJrFGh8VxBz4C4N9GJ2z8Qh6u2X6xU5iBNkWzA8FcJ6r9tWkGNT2l5m6ZzC2Kic4qK2C6cYcZ7Yxw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<!-- Winwheel.js -->
+<script src="https://cdn.jsdelivr.net/npm/winwheel@1.0.1/dist/Winwheel.min.js"></script>
+
+<script>
+/* ---------- Content knobs ---------- */
+// Weekly schedule
+const schedule = [
+  {day:"Sunday",    place:"Market Square",  hours:"12–6 PM"},
+  {day:"Monday",    place:"Closed",         hours:"—"},
+  {day:"Tuesday",   place:"Old City",       hours:"11–3 PM"},
+  {day:"Wednesday", place:"UT Campus",      hours:"12–5 PM"},
+  {day:"Thursday",  place:"Fountain City",  hours:"12–6 PM"},
+  {day:"Friday",    place:"Downtown",       hours:"1–8 PM"},
+  {day:"Saturday",  place:"Farmer’s Market",hours:"9–2 PM"}
+];
+
+// Spinner prizes — 5 slices, equal odds (20% each)
+const prizes = ["10% OFF","Free Topping","$1 Off Drink","BOGO 50%","Mystery Sweet"];
+const colors = ["#F8B8C9","#BFEEDF","#BFD6FF","#DCC6FF","#FFE3A1"];
+const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+/* ---------- Topbar: Today pill + hours list ---------- */
+(function initTopbar(){
+  const today = new Date().getDay(); // 0=Sun
+  const item = schedule[today];
+  const pill = document.getElementById('today-pill');
+  const text = item.place === "Closed" ? "Closed" : `<a href="https://maps.google.com/?q=${encodeURIComponent(item.place)}" target="_blank" rel="noopener">${item.place}</a>`;
+  pill.innerHTML = `Today: ${text} • ${item.hours}`;
+  const list = document.getElementById('hoursList');
+  list.innerHTML = schedule.map((d,i)=>`${i===today?'<b>':''}<li>${d.day.slice(0,3)} — ${d.place} • ${d.hours}${i===today?' (today)</b>':''}</li>`).join('');
+})();
+document.getElementById('year').textContent = new Date().getFullYear();
+
+/* ---------- Winwheel: responsive + retina ---------- */
+const tick = new Audio('https://cdn.jsdelivr.net/gh/terkelg/experiments@master/sounds/tick.mp3'); tick.volume = 0.2;
+let theWheel;
+
+function buildWheel() {
+  const wrap = document.querySelector('.canvas-wrap');
+  const canvas = document.getElementById('wheel');
+  const cssSize = Math.max(260, wrap.clientWidth);
+  const dpr = Math.max(1, Math.min(2, window.devicePixelRatio || 1)); // cap to 2 for perf
+
+  canvas.width  = Math.floor(cssSize * dpr);
+  canvas.height = Math.floor(cssSize * dpr);
+  canvas.style.width = cssSize + 'px';
+  canvas.style.height = cssSize + 'px';
+
   const segments = prizes.map((t,i)=>({ fillStyle: colors[i], text: t, textFillStyle: "#5b5b66", strokeStyle: "#fff" }));
 
-  // 3) create / recreate the wheel
   theWheel = new Winwheel({
     canvasId: 'wheel',
     numSegments: segments.length,
@@ -141,17 +393,15 @@ function announcePrize(){
     }
   });
 
-  // scale drawing for DPR (after Winwheel grabs the context)
+  // scale for DPR
   const ctx = theWheel.ctx;
   ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
   theWheel.draw();
 }
-
 // debounce resize
-let rz; window.addEventListener('resize', () => { clearTimeout(rz); rz = setTimeout(buildWheel, 200); });
-buildWheel();
+let rz; window.addEventListener('resize', ()=>{ clearTimeout(rz); rz=setTimeout(buildWheel,200); });
 
-/* ---- daily limit + spin flow (unchanged) ---- */
+/* ---------- Spin flow (daily limit) ---------- */
 const spinBtn = document.getElementById('spinBtn');
 const resetBtn = document.getElementById('resetBtn');
 const note = document.getElementById('spinNote');
@@ -172,8 +422,8 @@ function pickIndex(){ return Math.floor(Math.random()*prizes.length); } // 20% e
 
 function spin(){
   if (alreadySpun() || theWheel.animation.spinning) return;
-  const index = pickIndex();                       // 0..4
-  const segNum = index + 1;                        // Winwheel is 1-based
+  const index = pickIndex();               // 0..4
+  const segNum = index + 1;                // Winwheel is 1-based
   theWheel.animation.stopAngle = theWheel.getRandomForSegment(segNum); // preselect
   theWheel.startAnimation();
 }
@@ -194,14 +444,24 @@ winCode.addEventListener('click', async ()=>{
   }catch{}
 });
 
+/* ---------- Forms (demo) ---------- */
+document.getElementById('qq-form').addEventListener('submit', (e)=>{
+  e.preventDefault();
+  const status = document.getElementById('qq-status');
+  status.textContent = "Thanks! We’ll reply as soon as we park the truck.";
+  e.target.reset();
+});
+
+/* ---------- Init ---------- */
+buildWheel();
 if (location.hash === '#reset'){ localStorage.removeItem('sw_spin'); enableSpinUI(); }
 
+/* ---------- Utils ---------- */
 function couponCode(){
   const s = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789"; let out = "SWEET-";
   for(let i=0;i<5;i++) out += s[Math.floor(Math.random()*s.length)];
   return out;
 }
 </script>
-
 </body>
 </html>
