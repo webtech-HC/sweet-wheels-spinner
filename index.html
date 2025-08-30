@@ -4,7 +4,6 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Sweet Wheels — Dessert Truck</title>
-<meta name="description" content="Treat Yourself — Sweet Wheels Desserts. Menu highlights, today’s location, and a fair, fun 5-slice deal spinner." />
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
@@ -28,19 +27,17 @@ h2{font-size:clamp(1.3rem,2.1vw,1.8rem)}
 .btn.line{background:#fff} .btn.mini{padding:.5rem .8rem;border-radius:14px}
 .card{background:var(--panel);border:1px solid var(--line);border-radius:22px;padding:14px 16px;
   box-shadow:0 18px 40px rgba(32,33,36,.10), inset 0 2px 0 rgba(255,255,255,.85)}
-/* Spinner */
+/* Spinner visuals */
 .deals-grid{display:grid;grid-template-columns:1.1fr .9fr;gap:22px;align-items:center}
 @media (max-width:900px){ .deals-grid{grid-template-columns:1fr} }
-.stage{position:relative;display:grid;place-items:center;padding:18px}
+.spinner{display:grid;gap:10px;justify-items:center}
+.stage{position:relative;display:flex;align-items:center;justify-content:center;padding:18px;max-width:600px;margin:0 auto}
 .rim{position:absolute;inset:0;border-radius:28px;
   box-shadow:0 26px 60px rgba(32,33,36,.14), inset 0 8px 0 rgba(255,255,255,.85);
   background:radial-gradient(120px 80px at 50% 40%,#fff 0%, #fff 50%, rgba(0,0,0,.02) 100%)}
-.canvas-wrap{position:relative;display:inline-block;border-radius:50%;
-  padding:14px;background:#fff;box-shadow:0 18px 38px rgba(0,0,0,.12), inset 0 4px 0 rgba(255,255,255,.85);
-  width:min(420px,80vw)}
-.pointer{position:absolute;top:-14px;left:50%;transform:translateX(-50%);width:0;height:0;
-  border-left:14px solid transparent;border-right:14px solid transparent;border-bottom:22px solid #ffb2c4;
-  filter:drop-shadow(0 6px 10px rgba(0,0,0,.12))}
+.wheel-wrap{display:block; width:min(92vw,520px); max-width:520px; aspect-ratio:1/1;
+  background:#fff; border-radius:50%; padding:12px;
+  box-shadow:0 18px 38px rgba(0,0,0,.12), inset 0 4px 0 rgba(255,255,255,.85)}
 .controls{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-top:.4rem}
 .coupon{font-family:ui-monospace,Menlo,Consolas,monospace;background:#f7f7f9;border:1px dashed #cfcfd8;border-radius:10px;padding:6px 8px;display:inline-block;cursor:pointer}
 .muted{color:var(--muted)} .small{font-size:.9rem}
@@ -56,22 +53,20 @@ h2{font-size:clamp(1.3rem,2.1vw,1.8rem)}
 <header class="topbar">
   <div class="wrap">
     <span class="pill" id="today-pill" aria-live="polite">Today: …</span>
-    <nav class="mini-nav" aria-label="Utility">
-      <a class="btn mini" href="#order">Order Ahead</a>
-    </nav>
+    <nav class="mini-nav" aria-label="Utility"><a class="btn mini" href="#order">Order Ahead</a></nav>
   </div>
 </header>
 
 <div id="root"></div>
 
-<!-- React 18 (UMD) -->
+<!-- React 18 UMD -->
 <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
 <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
 
 <script>
 const {useEffect, useMemo, useRef, useState} = React;
 
-/* ---------- Utilities ---------- */
+/* ===== Utils ===== */
 const prizes = ["10% OFF","Free Topping","$1 Off Drink","BOGO 50%","Mystery Sweet"];
 const colors = ["#F8B8C9","#BFEEDF","#BFD6FF","#DCC6FF","#FFE3A1"];
 const prefersReduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -85,32 +80,47 @@ function clamp01(t){ return Math.max(0, Math.min(1, t)); }
 function easeOutCubic(t){ t=clamp01(t); return 1-Math.pow(1-t,3); }
 function normAngle(a){ return (a%360+360)%360; }
 
-/* ---------- Spinner Component (SVG) ---------- */
-function Spinner({onWin}) {
-  const N = 5;                 // segments
-  const slice = 360/N;         // 72°
-  const baseStart = -90;       // top = pointer direction
-  const centers = useMemo(()=>Array.from({length:N}, (_,i)=> baseStart + (i+0.5)*slice), [N]);
+/* ===== Responsive observer ===== */
+function useSize(ref){
+  const [w,setW]=useState(420);
+  useEffect(()=>{
+    if(!ref.current) return;
+    const ro = new ResizeObserver(entries=>{
+      for(const e of entries){
+        const cw = e.contentRect.width;
+        setW(Math.max(260, Math.min(520, cw))); // clamp 260–520
+      }
+    });
+    ro.observe(ref.current);
+    return ()=>ro.disconnect();
+  },[ref]);
+  return w;
+}
 
-  // rotation in degrees, clockwise; applied to the whole wheel <g>
-  const [rot, setRot] = useState(0);
-  const [spinning, setSpinning] = useState(false);
+/* ===== Spinner (SVG, responsive, upright text) ===== */
+function Spinner({onWin}){
+  const N = 5, slice = 360/N, baseStart=-90;  // pointer at top
+  const centers = useMemo(()=>Array.from({length:N},(_,i)=> baseStart + (i+0.5)*slice),[]);
+  const [rot,setRot]=useState(0);
+  const [spinning,setSpinning]=useState(false);
 
-  // pick index (force via query ok)
+  // measure container to size the wheel
+  const wrapRef = useRef(null);
+  const size = useSize(wrapRef);              // 260..520
+  const r = size/2 - size*0.02, cx=size/2, cy=size/2;
+  const stroke = Math.max(2, size*0.004);
+  const ringR = r*0.68;
+  const labelMargin = size*0.09;
+  const pointerW = size*0.08, pointerH = size*0.10, pointerGap = size*0.01;
+
   function pickIndex(){
     if (force){
-      const n = +force;
-      if (n>=1 && n<=N) return n-1;
-      const i = prizes.findIndex(p => p.toLowerCase()===String(force).toLowerCase());
+      const n = +force; if(n>=1 && n<=N) return n-1;
+      const i = prizes.findIndex(p=>p.toLowerCase()===String(force).toLowerCase());
       if (i!==-1) return i;
     }
     return Math.floor(Math.random()*N);
   }
-
-  // Given current rotation "rot", compute the additional rotation required to land
-  // the *center* of segment i at the pointer (top). We want:
-  // (centers[i] + finalRot) ≡ -90   (mod 360)
-  // => finalRot ≡ -90 - centers[i]  (mod 360)
   function targetModForIndex(i){ return normAngle(-90 - centers[i]); }
 
   function spin(){
@@ -118,12 +128,11 @@ function Spinner({onWin}) {
     const i = pickIndex();
     const turns = prefersReduced ? 1 : 6;
     const duration = prefersReduced ? 160 : 4800;
-
     const current = rot;
     const targetMod = targetModForIndex(i);
     const currentMod = normAngle(current);
-    const deltaMod = normAngle(targetMod - currentMod); // shortest positive delta to exact modulo
-    const finalRot = current + turns*360 + deltaMod;     // deterministic, ends exactly at i
+    const deltaMod = normAngle(targetMod - currentMod);
+    const finalRot = current + turns*360 + deltaMod;
 
     setSpinning(true);
     const start = performance.now();
@@ -132,22 +141,12 @@ function Spinner({onWin}) {
       const eased = easeOutCubic(t);
       setRot(current + (finalRot-current)*eased);
       if (t<1) requestAnimationFrame(frame);
-      else {
-        setRot(finalRot);
-        setSpinning(false);
-        setSpun();
-        onWin(prizes[i]);
-      }
+      else { setRot(finalRot); setSpinning(false); setSpun(); onWin(prizes[i]); }
     }
     requestAnimationFrame(frame);
   }
 
   useEffect(()=>{ if (alreadySpun()) onWin(null,true); },[]);
-
-  // Responsive size
-  const size = 420;
-  const r = size/2 - 8;
-  const cx = size/2, cy = size/2;
 
   function arcPath(a0,a1){
     const rad = (d)=> d*Math.PI/180;
@@ -157,7 +156,7 @@ function Spinner({onWin}) {
     return `M ${cx} ${cy} L ${x(a0)} ${y(a0)} A ${r} ${r} 0 ${large} 1 ${x(a1)} ${y(a1)} Z`;
   }
 
-  const segments = Array.from({length:N}, (_,i)=>({
+  const segments = Array.from({length:N},(_,i)=>({
     start: baseStart + i*slice,
     end: baseStart + (i+1)*slice,
     fill: colors[i],
@@ -168,77 +167,85 @@ function Spinner({onWin}) {
   const canSpin = !spinning && !alreadySpun();
 
   return (
-    React.createElement('div', {className:'spinner card', 'aria-live':'polite'},
+    React.createElement('div',{className:'spinner card','aria-live':'polite'},
       React.createElement('div',{className:'stage'},
         React.createElement('div',{className:'rim','aria-hidden':'true'}),
-        React.createElement('div',{className:'canvas-wrap'},
-          React.createElement('span',{className:'pointer','aria-hidden':'true'}),
-          React.createElement('svg',{width:size,height:size,viewBox:`0 0 ${size} ${size}`,role:'img','aria-label':'Prize wheel'},
+        React.createElement('div',{className:'wheel-wrap', ref:wrapRef},
+          React.createElement('svg',{
+            width:'100%', height:'100%', viewBox:`0 0 ${size} ${size}`,
+            preserveAspectRatio:'xMidYMid meet', role:'img','aria-label':'Prize wheel'
+          },
+            // wheel group
             React.createElement('g',{transform:`rotate(${rot} ${cx} ${cy})`},
               segments.map((s,idx)=>
                 React.createElement('g',{key:idx},
-                  React.createElement('path',{d:arcPath(s.start,s.end),fill:s.fill,stroke:'#fff',strokeWidth:2}),
-                  React.createElement('text',{
-                    x:cx,y:cy,
-                    transform:`rotate(${s.mid} ${cx} ${cy}) translate(${r-32},0) rotate(90 ${cx} ${cy})`,
-                    fill:'#5b5b66',
-                    'font-family':'Fredoka, Arial, sans-serif',
-                    'font-weight':'700',
-                    'font-size':'16',
-                    'text-anchor':'middle',
-                    'dominant-baseline':'middle'
-                  }, s.label)
+                  React.createElement('path',{d:arcPath(s.start,s.end), fill:s.fill, stroke:'#fff', strokeWidth:stroke}),
+                  // upright text:
+                  (()=> {
+                    const a = normAngle(s.mid);
+                    const needsFlip = a>90 && a<270;
+                    // rotate to mid, move outward, then rotate text tangent; flip if needed
+                    const rot1 = s.mid, tx = r - labelMargin;
+                    const extra = needsFlip ? 180 : 0;
+                    return React.createElement('text',{
+                      x:cx, y:cy,
+                      transform:`rotate(${rot1} ${cx} ${cy}) translate(${tx} 0) rotate(${90+extra})`,
+                      fill:'#5b5b66',
+                      'font-family':'Fredoka, Arial, sans-serif','font-weight':'700',
+                      'font-size': Math.max(12, size*0.038), 'text-anchor':'middle', 'dominant-baseline':'middle'
+                    }, s.label);
+                  })()
                 )
               ),
               // inner ring
-              React.createElement('circle',{cx,cy,r:r*0.72,fill:'none',stroke:'rgba(255,255,255,.75)',strokeWidth:4})
-            )
+              React.createElement('circle',{cx,cy,r:ringR, fill:'none', stroke:'rgba(255,255,255,.8)', strokeWidth:stroke*2})
+            ),
+            // pointer (DOWNWARD triangle, always centered)
+            (()=> {
+              const tipY = cy - r - pointerGap;                         // tip just outside rim
+              const baseY = tipY + pointerH;
+              const leftX = cx - pointerW/2, rightX = cx + pointerW/2;
+              const d = `M ${cx} ${tipY} L ${rightX} ${baseY} L ${leftX} ${baseY} Z`;
+              return React.createElement('path',{d, fill:'#ffb2c4', stroke:'#e39aae', strokeWidth:stroke, 'aria-hidden':'true'});
+            })()
           )
         )
       ),
       React.createElement('div',{className:'controls'},
-        React.createElement('button',{id:'spinBtn',className:'btn',disabled:!canSpin,onClick:spin},
+        React.createElement('button',{className:'btn',disabled:!canSpin,onClick:spin},
           canSpin ? 'Spin' : (alreadySpun() ? 'Come back tomorrow' : 'Spinning…')
         ),
-        React.createElement('button',{
-          id:'resetBtn',className:'btn',type:'button',
-          onClick:()=>{ localStorage.removeItem('sw_spin'); onWin(null,false,true); }
-        },'Reset (dev)')
+        React.createElement('button',{className:'btn',type:'button',onClick:()=>{localStorage.removeItem('sw_spin'); onWin(null,false,true);}},'Reset (dev)')
       ),
-      React.createElement('p',{id:'spinNote',className:'muted small'},
-        alreadySpun()? 'One spin per guest per day.' : 'Good luck!'
-      )
+      React.createElement('p',{className:'muted small'}, alreadySpun()? 'One spin per guest per day.' : 'Good luck!')
     )
   );
 }
 
-/* ---------- Page ---------- */
+/* ===== Page ===== */
 function App(){
   const [prize,setPrize] = useState(null);
-  const [spun,setSpunState] = useState(alreadySpun());
 
   function handleWin(label, wasAlready=false, wasReset=false){
-    if (wasReset){ setPrize(null); setSpunState(false); return; }
-    if (wasAlready){ setSpunState(true); return; }
-    setPrize(label); setSpunState(true);
+    if (wasReset){ setPrize(null); return; }
+    if (wasAlready) return;
+    setPrize(label);
   }
 
+  // simple “today” pill
   useEffect(()=>{
     const sched = [
-      {day:"Sun", place:"Market Square", hours:"12–6 PM"},
-      {day:"Mon", place:"Closed", hours:"—"},
-      {day:"Tue", place:"Old City", hours:"11–3 PM"},
-      {day:"Wed", place:"UT Campus", hours:"12–5 PM"},
-      {day:"Thu", place:"Fountain City", hours:"12–6 PM"},
-      {day:"Fri", place:"Downtown", hours:"1–8 PM"},
-      {day:"Sat", place:"Farmer’s Market", hours:"9–2 PM"}
+      {d:"Sun", p:"Market Square", h:"12–6 PM"},
+      {d:"Mon", p:"Closed", h:"—"},
+      {d:"Tue", p:"Old City", h:"11–3 PM"},
+      {d:"Wed", p:"UT Campus", h:"12–5 PM"},
+      {d:"Thu", p:"Fountain City", h:"12–6 PM"},
+      {d:"Fri", p:"Downtown", h:"1–8 PM"},
+      {d:"Sat", p:"Farmer’s Market", h:"9–2 PM"}
     ];
-    const t = new Date().getDay();
-    const it = sched[t];
+    const t = new Date().getDay(), it = sched[t];
     const pill = document.getElementById('today-pill');
-    const text = it.place==="Closed" ? "Closed" :
-      `<a href="https://maps.google.com/?q=${encodeURIComponent(it.place)}" target="_blank" rel="noopener">${it.place}</a>`;
-    pill.innerHTML = `Today: ${text} • ${it.hours}`;
+    pill.innerHTML = `Today: ${it.p==="Closed"?"Closed":`<a href="https://maps.google.com/?q=${encodeURIComponent(it.p)}" target="_blank" rel="noopener">${it.p}</a>`} • ${it.h}`;
   },[]);
 
   return (
@@ -260,10 +267,7 @@ function App(){
             React.createElement('h3',{style:{marginTop:0}},'Your prize'),
             React.createElement('p',{id:'winText',className:'muted'}, prize ? `🎉 ${prize}` : 'Spin to see what you get!'),
             React.createElement('p',{
-              id:'winCode',
-              className:'coupon',
-              title:'Click to copy',
-              hidden: !prize,
+              id:'winCode',className:'coupon',title:'Click to copy',hidden: !prize,
               onClick: async (e)=>{
                 const code = e.currentTarget.textContent.replace('Code: ','') || couponCode();
                 try{
@@ -285,7 +289,7 @@ function App(){
   );
 }
 
-/* ---------- mount ---------- */
+/* mount */
 ReactDOM.createRoot(document.getElementById('root')).render(React.createElement(App));
 </script>
 </body>
