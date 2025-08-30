@@ -1,0 +1,9 @@
+{
+  "prizes": [
+    {"label": "10% OFF",        "weight": 1, "codePrefix": "TEN"},
+    {"label": "Free Topping",   "weight": 1, "codePrefix": "TOP"},
+    {"label": "$1 Off Drink",   "weight": 1, "codePrefix": "D1"},
+    {"label": "BOGO 50%",       "weight": 1, "codePrefix": "B50"},
+    {"label": "Mystery Sweet",  "weight": 1, "codePrefix": "MYS"}
+  ]
+}
