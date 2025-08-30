@@ -1,0 +1,179 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Sweet Wheels — Spin to Win</title>
+<meta name="description" content="Spin to win a daily Sweet Wheels treat. Pastel clay style, 5 prizes, fair odds." />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#3b3a40; --muted:#8E90A0; --bg:#FFF7EF; --rim:#ffffff; --line:rgba(30,33,36,.10);
+  --straw:#F8B8C9; --mint:#BFEEDF; --blue:#BFD6FF; --lav:#DCC6FF; --lemon:#FFE3A1;
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:linear-gradient(120deg,var(--bg),#fff);color:var(--ink);font-family:Inter,system-ui,Arial,sans-serif}
+h1{font-family:Fredoka,system-ui,Arial,sans-serif;font-size:clamp(1.6rem,4vw,2.4rem);margin:0 0 .5rem}
+.wrap{max-width:900px;margin:0 auto;padding:clamp(14px,2vw,22px)}
+.card{background:#fff;border:1px solid var(--line);border-radius:22px;padding:14px 16px;
+  box-shadow:0 18px 40px rgba(32,33,36,.10), inset 0 2px 0 rgba(255,255,255,.85)}
+.btn{display:inline-flex;align-items:center;gap:.5rem;background:var(--straw);border:1px solid var(--line);
+  border-radius:18px;padding:.7rem 1rem;font-weight:700;text-decoration:none;color:inherit;box-shadow:0 6px 18px rgba(239,154,174,.18), inset 0 2px 0 rgba(255,255,255,.85)}
+.btn:disabled{opacity:.6;cursor:not-allowed}
+.muted{color:var(--muted)} .small{font-size:.92rem}
+
+/* Layout */
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;align-items:center}
+@media (max-width:900px){ .grid{grid-template-columns:1fr} }
+
+/* Spinner layout */
+.spinner{display:grid;place-items:center;gap:12px}
+.stage{position:relative;display:grid;place-items:center;padding:18px}
+.rim{position:absolute;inset:0;border-radius:28px;
+     box-shadow: 0 26px 60px rgba(32,33,36,.14), inset 0 8px 0 rgba(255,255,255,.85);
+     background:radial-gradient(120px 80px at 50% 40%,#fff 0%, #fff 50%, rgba(0,0,0,.02) 100%);}
+
+/* Canvas gets a soft “clay” frame */
+.canvas-wrap{position:relative;display:inline-block;border-radius:50%;padding:14px;background:var(--rim);
+  box-shadow:0 18px 38px rgba(0,0,0,.12), inset 0 4px 0 rgba(255,255,255,.85)}
+#wheel{display:block}
+
+/* Top pointer */
+.pointer{position:absolute;top:-14px;left:50%;transform:translateX(-50%);width:0;height:0;
+  border-left:14px solid transparent;border-right:14px solid transparent;border-bottom:22px solid #ffb2c4;
+  filter:drop-shadow(0 6px 10px rgba(0,0,0,.12))}
+.controls{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
+.coupon{font-family:ui-monospace,Menlo,Consolas,monospace;background:#f7f7f9;border:1px dashed #cfcfd8;border-radius:10px;padding:6px 8px;display:inline-block;cursor:pointer}
+</style>
+</head>
+<body>
+  <main class="wrap">
+    <h1>Sweet Wheels — Sweet Deals</h1>
+    <p class="muted">One spin per guest per day. Show your win screen at checkout. Valid today only.</p>
+
+    <section class="grid">
+      <div class="spinner card" aria-live="polite">
+        <div class="stage">
+          <div class="rim" aria-hidden="true"></div>
+          <div class="canvas-wrap">
+            <span class="pointer" aria-hidden="true"></span>
+            <canvas id="wheel" width="420" height="420" role="img" aria-label="Prize wheel: spin to reveal your deal"></canvas>
+          </div>
+        </div>
+        <div class="controls">
+          <button id="spinBtn" class="btn">Spin</button>
+          <button id="resetBtn" class="btn" type="button">Reset (dev)</button>
+        </div>
+        <p id="spinNote" class="muted small"></p>
+      </div>
+
+      <aside class="card">
+        <h2 style="margin-top:0">Your prize</h2>
+        <p id="winText" class="muted">Spin to see what you get!</p>
+        <p id="winCode" class="coupon" title="Click to copy" hidden>Code: SWEET-00000</p>
+      </aside>
+    </section>
+  </main>
+
+  <!-- GSAP (TweenMax 2.x) is required by Winwheel.js -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/2.1.3/TweenMax.min.js" integrity="sha512-58H8hNtFZgJrFGh8VxBz4C4N9GJ2z8Qh6u2X6xU5iBNkWzA8FcJ6r9tWkGNT2l5m6ZzC2Kic4qK2C6cYcZ7Yxw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <!-- Winwheel.js (classic build) -->
+  <script src="https://cdn.jsdelivr.net/npm/winwheel@1.0.1/dist/Winwheel.min.js"></script>
+
+  <script>
+  // ---- config
+  const prizes = ["10% OFF","Free Topping","$1 Off Drink","BOGO 50%","Mystery Sweet"]; // equal 20% odds
+  const colors = ["#F8B8C9","#BFEEDF","#BFD6FF","#DCC6FF","#FFE3A1"]; // pastel slices
+  const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // ---- audio tick (optional)
+  const tick = new Audio('https://cdn.jsdelivr.net/gh/terkelg/experiments@master/sounds/tick.mp3');
+  tick.volume = 0.2;
+
+  // ---- build wheel (segments are 1-based in Winwheel)
+  const segments = prizes.map((t,i)=>({ fillStyle: colors[i], text: t, textFillStyle: "#5b5b66", strokeStyle: "#fff" }));
+
+  const theWheel = new Winwheel({
+    canvasId: 'wheel',
+    numSegments: segments.length,
+    outerRadius: 200,
+    textFontFamily: 'Fredoka, Arial, sans-serif',
+    textAlignment: 'outer',
+    textMargin: 20,
+    segments,
+    pins: { number: 25, fillStyle: '#fff', outerRadius: 2 },
+    animation: {
+      type: 'spinToStop',
+      duration: prefersReduced ? 0.1 : 5,
+      spins: prefersReduced ? 1 : 6,
+      callbackFinished: announcePrize,
+      callbackSound: playTick,
+      soundTrigger: 'pin'
+    }
+  });
+
+  function playTick(){ try{ tick.currentTime = 0; tick.play(); }catch(e){} }
+
+  // ---- spin control (preselect outcome, daily limit)
+  const spinBtn = document.getElementById('spinBtn');
+  const resetBtn = document.getElementById('resetBtn');
+  const note = document.getElementById('spinNote');
+  const winText = document.getElementById('winText');
+  const winCode = document.getElementById('winCode');
+
+  initDay();
+
+  spinBtn.addEventListener('click', spin);
+  resetBtn.addEventListener('click', ()=>{ localStorage.removeItem('sw_spin'); enableSpinUI(); winText.textContent='Spin to see what you get!'; winCode.hidden=true; });
+
+  function todayKey(){ return new Date().toISOString().slice(0,10); }
+  function alreadySpun(){ return localStorage.getItem('sw_spin') === todayKey(); }
+  function setSpun(){ localStorage.setItem('sw_spin', todayKey()); }
+  function enableSpinUI(){ spinBtn.disabled=false; spinBtn.textContent='Spin'; note.textContent='Good luck!'; }
+  function disableSpinUI(){ spinBtn.disabled=true; spinBtn.textContent='Come back tomorrow'; note.textContent='One spin per guest per day.'; }
+
+  function initDay(){ alreadySpun() ? disableSpinUI() : enableSpinUI(); }
+
+  function pickIndex(){ return Math.floor(Math.random()*prizes.length); } // equal odds
+
+  function spin(){
+    if (alreadySpun() || theWheel.animation.spinning) return;
+
+    const index = pickIndex();                // 0..4
+    const segmentNumber = index + 1;          // Winwheel is 1-based
+    theWheel.animation.stopAngle = theWheel.getRandomForSegment(segmentNumber); // preselect win
+    theWheel.startAnimation();
+  }
+
+  function announcePrize(){
+    const seg = theWheel.getIndicatedSegment(); // safety check
+    winText.textContent = `🎉 ${seg.text}`;
+    winCode.textContent = "Code: " + couponCode();
+    winCode.hidden = false;
+    setSpun();
+    disableSpinUI();
+  }
+
+  winCode.addEventListener('click', async ()=>{
+    try{
+      await navigator.clipboard.writeText(winCode.textContent.replace('Code: ', '')); 
+      const t = winCode.textContent; winCode.textContent = t + '  ✓ copied';
+      setTimeout(()=> winCode.textContent = t, 1400);
+    }catch{}
+  });
+
+  // tiny confetti (respect reduced motion)
+  function confetti(){ if(prefersReduced) return; /* add later if you want */ }
+
+  function couponCode(){
+    const s = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789"; let out = "SWEET-";
+    for(let i=0;i<5;i++) out += s[Math.floor(Math.random()*s.length)];
+    return out;
+  }
+
+  // dev helper
+  if (location.hash === '#reset'){ localStorage.removeItem('sw_spin'); enableSpinUI(); }
+  </script>
+</body>
+</html>
