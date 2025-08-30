@@ -19,21 +19,15 @@ h1,h2,h3{font-family:Fredoka,system-ui,Arial,sans-serif;margin:.2rem 0 .6rem}
 h1{font-size:clamp(1.8rem,3.2vw,3rem);line-height:1.1}
 h2{font-size:clamp(1.3rem,2.1vw,1.8rem)}
 h3{font-size:1.1rem}
-p{line-height:1.5}
-a{color:inherit}
 .wrap{max-width:1100px;margin:0 auto;padding:clamp(14px,2vw,22px)}
 .section{padding:clamp(18px,3.2vw,40px) 0}
 .sub{color:var(--muted)} .accent{color:#5b5b66}
-
-/* Buttons */
 .btn{background:var(--straw);border:1px solid var(--line);border-radius:18px;padding:.7rem 1rem;
   box-shadow:0 6px 18px rgba(239,154,174,.18), inset 0 2px 0 rgba(255,255,255,.85);
   text-decoration:none;display:inline-flex;gap:.5rem;align-items:center;font-weight:700;color:inherit}
 .btn:hover{filter:saturate(1.02);transform:translateY(-1px)}
 .btn.line{background:#fff} .btn.mini{padding:.5rem .8rem;border-radius:14px}
-.mt{margin-top:1rem} .muted{color:var(--muted)} .small{font-size:.9rem}
-
-/* Topbar */
+.muted{color:var(--muted)} .small{font-size:.9rem}
 .topbar{position:sticky;top:0;background:rgba(255,255,255,.8);backdrop-filter:blur(8px);border-bottom:1px solid var(--line);z-index:50}
 .topbar .wrap{display:flex;align-items:center;justify-content:space-between;gap:12px}
 .pill{background:#fff;border:1px solid var(--line);border-radius:999px;padding:.35rem .7rem;box-shadow:0 4px 16px rgba(0,0,0,.06)}
@@ -46,15 +40,11 @@ details.hours[open] summary{background:rgba(0,0,0,.04)}
 details.hours[open] .hours-card{display:block}
 .hours-list{margin:0;padding:.2rem .2rem .2rem 1.2rem}
 .hours-list li{line-height:1.6}
-
-/* Hero */
 .hero{padding:28px 0 8px}
 .hero-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:26px;align-items:center}
 .hero-art{display:grid;place-items:center}
 .hero-svg{width:min(520px,96%);filter:drop-shadow(0 20px 40px rgba(30,20,10,.12))}
 .cta-row{display:flex;gap:12px;flex-wrap:wrap}
-
-/* Cards / Menu */
 .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px;list-style:none;padding:0;margin:0}
 .card{background:var(--panel);border:1px solid var(--line);border-radius:22px;padding:14px 16px;
   box-shadow:0 18px 40px rgba(32,33,36,.10), inset 0 2px 0 rgba(255,255,255,.85)}
@@ -63,7 +53,6 @@ details.hours[open] .hours-card{display:block}
 .badge{background:var(--mint);border:1px solid #9FD7C6;border-radius:10px;padding:2px 8px;font-weight:700}
 .badge.warn{background:#FFE3E9;border-color:#F4C2CF}
 
-/* Spinner */
 .deals-grid{display:grid;grid-template-columns:1.1fr .9fr;gap:22px;align-items:center}
 .spinner{display:grid;place-items:center;gap:12px}
 .stage{position:relative;display:grid;place-items:center;padding:18px}
@@ -80,7 +69,6 @@ details.hours[open] .hours-card{display:block}
 .controls{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
 .coupon{font-family:ui-monospace,Menlo,Consolas,monospace;background:#f7f7f9;border:1px dashed #cfcfd8;border-radius:10px;padding:6px 8px;display:inline-block;cursor:pointer}
 
-/* Forms / IG */
 .form input,.form textarea{width:100%;padding:.7rem;border:1px solid var(--line);border-radius:14px;background:#fff;box-shadow:inset 0 2px 0 rgba(255,255,255,.8)}
 .form label{display:grid;gap:6px;margin-bottom:10px}
 .form input:focus,.form textarea:focus{outline:2px solid var(--ring);outline-offset:2px}
@@ -89,20 +77,12 @@ details.hours[open] .hours-card{display:block}
 .ig{list-style:none;padding:0;margin:6px 0;display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
 .ig .ph{background:linear-gradient(120deg,#fff,var(--cream));border:1px solid var(--line);border-radius:18px;aspect-ratio:1;box-shadow:inset 0 2px 0 rgba(255,255,255,.8)}
 
-/* Footer + Sticky CTA */
 .footer{border-top:1px solid var(--line);padding:18px 0;background:#fff}
 .sticky-cta{position:sticky;bottom:0;display:none;gap:8px;justify-content:space-around;padding:8px;
   padding-bottom:calc(8px + env(safe-area-inset-bottom));
   background:rgba(255,255,255,.85);backdrop-filter:blur(8px);border-top:1px solid var(--line);z-index:60}
 .sticky-cta .btn{box-shadow:none}
-
-/* Responsive */
-@media (max-width:900px){
-  .hero-grid{grid-template-columns:1fr}
-  .deals-grid{grid-template-columns:1fr}
-  .grid2{grid-template-columns:1fr}
-  .sticky-cta{display:flex}
-}
+@media (max-width:900px){ .hero-grid{grid-template-columns:1fr} .deals-grid{grid-template-columns:1fr} .grid2{grid-template-columns:1fr} .sticky-cta{display:flex}}
 :focus-visible{outline:3px solid var(--ring);outline-offset:2px}
 </style>
 </head>
@@ -129,36 +109,23 @@ details.hours[open] .hours-card{display:block}
         <a class="btn line" href="#order">Order Ahead</a>
       </div>
     </div>
-    <!-- New pastel clay truck SVG -->
+    <!-- simple, clean pastel SVG (swap later for photo if you like) -->
     <div class="hero-art" aria-hidden="true">
       <svg class="hero-svg" viewBox="0 0 980 520" xmlns="http://www.w3.org/2000/svg">
         <defs>
-          <linearGradient id="bg" x1="0" x2="0" y1="0" y2="1">
-            <stop offset="0" stop-color="#FFF7EF"/><stop offset="1" stop-color="#FFFFFF"/>
-          </linearGradient>
-          <linearGradient id="cone" x1="0" x2="0" y1="0" y2="1">
-            <stop offset="0" stop-color="#FFD8A0"/><stop offset="1" stop-color="#E6B273"/>
-          </linearGradient>
-          <linearGradient id="swirl" x1="0" x2="0" y1="0" y2="1">
-            <stop offset="0" stop-color="#FFE5EE"/><stop offset="1" stop-color="#F8B8C9"/>
-          </linearGradient>
+          <linearGradient id="bg" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#FFF7EF"/><stop offset="1" stop-color="#FFFFFF"/></linearGradient>
+          <linearGradient id="cone" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#FFD8A0"/><stop offset="1" stop-color="#E6B273"/></linearGradient>
+          <linearGradient id="swirl" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#FFE5EE"/><stop offset="1" stop-color="#F8B8C9"/></linearGradient>
         </defs>
         <rect x="0" y="0" width="980" height="520" fill="url(#bg)" rx="28"/>
-        <!-- road shadow -->
         <ellipse cx="640" cy="435" rx="300" ry="38" fill="#000" opacity=".05"/>
-        <!-- truck body -->
         <g transform="translate(360,160)">
           <rect x="0" y="60" rx="26" ry="26" width="420" height="170" fill="#FFEDE4" stroke="#EAD8C9"/>
           <rect x="260" y="20" rx="18" ry="18" width="180" height="210" fill="#BFEEDF" stroke="#9FD7C6"/>
           <rect x="300" y="55" rx="10" ry="10" width="70" height="56" fill="#BFD6FF" stroke="#9FB7E8"/>
-          <!-- wheels -->
-          <g fill="#F8B8C9" stroke="#E09CAF">
-            <circle cx="86" cy="250" r="36"/><circle cx="300" cy="250" r="36"/>
-          </g>
-          <!-- service window -->
+          <g fill="#F8B8C9" stroke="#E09CAF"><circle cx="86" cy="250" r="36"/><circle cx="300" cy="250" r="36"/></g>
           <rect x="40" y="100" width="160" height="64" rx="10" fill="#fff" opacity=".9" stroke="#E6E6E6"/>
           <rect x="40" y="94" width="160" height="14" rx="8" fill="#F8B8C9"/>
-          <!-- cone sign on top -->
           <g transform="translate(150,-40)">
             <path d="M60 140l110 0-16 70a16 16 0 0 1-16 12H92a16 16 0 0 1-16-12l-16-70z" fill="url(#cone)" stroke="#D1A06A"/>
             <path d="M82 156h66M78 176h74M74 196h82" stroke="#E5BA79" stroke-width="6" opacity=".7"/>
@@ -252,11 +219,8 @@ details.hours[open] .hours-card{display:block}
   </div>
 </footer>
 
-<!-- 1) Try TweenMax (no SRI), we'll add fallbacks in JS if missing -->
-<script defer src="https://cdn.jsdelivr.net/npm/gsap@2.1.3/TweenMax.min.js"></script>
-
 <script>
-/* ===== Topbar basics ===== */
+/* ---- Topbar basics ---- */
 const schedule = [
   {day:"Sunday", place:"Market Square", hours:"12–6 PM"},
   {day:"Monday", place:"Closed", hours:"—"},
@@ -282,123 +246,169 @@ document.getElementById('qq-form').addEventListener('submit', e=>{
   e.preventDefault(); document.getElementById('qq-status').textContent="Thanks! We’ll reply as soon as we park the truck."; e.target.reset();
 });
 
-/* ===== Spinner with robust loaders ===== */
+/* =========================
+   Dependency-free Spinner
+   ========================= */
 const prizes = ["10% OFF","Free Topping","$1 Off Drink","BOGO 50%","Mystery Sweet"];
 const colors = ["#F8B8C9","#BFEEDF","#BFD6FF","#DCC6FF","#FFE3A1"];
 const prefersReduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
-const tick = new Audio('https://cdn.jsdelivr.net/gh/terkelg/experiments@master/sounds/tick.mp3'); tick.volume = 0.2;
 const urlParams = new URLSearchParams(location.search);
-const force = urlParams.get('force');
-let theWheel;
-
+const force = urlParams.get('force'); // "1..5" or label
 const spinBtn = document.getElementById('spinBtn');
 const resetBtn = document.getElementById('resetBtn');
 const note = document.getElementById('spinNote');
 const winText = document.getElementById('winText');
 const winCode = document.getElementById('winCode');
-
 resetBtn.addEventListener('click', ()=>{ localStorage.removeItem('sw_spin'); enableSpinUI(); winText.textContent='Spin to see what you get!'; winCode.hidden=true; });
-
 function todayKey(){ return new Date().toISOString().slice(0,10); }
 function alreadySpun(){ return localStorage.getItem('sw_spin') === todayKey(); }
 function setSpun(){ localStorage.setItem('sw_spin', todayKey()); }
 function enableSpinUI(){ spinBtn.disabled=false; spinBtn.textContent='Spin'; note.textContent='Good luck!'; }
 function disableSpinUI(){ spinBtn.disabled=true; spinBtn.textContent='Come back tomorrow'; note.textContent='One spin per guest per day.'; }
 
-(async function boot(){
-  await domReady();
-  // Ensure TweenMax
-  if (!window.TweenMax){
-    await loadScript('https://unpkg.com/gsap@2.1.3/TweenMax.min.js').catch(()=>{});
+class MiniWheel {
+  constructor(canvas, segments, options={}){
+    this.canvas = canvas;
+    this.ctx = canvas.getContext('2d');
+    this.segments = segments;          // [{text, color}]
+    this.rotation = 0;                  // radians
+    this.textColor = options.textColor || "#5b5b66";
+    this.strokeColor = options.stroke || "#ffffff";
+    this.bgShadow = true;
+    this.resize();
+    let t; addEventListener('resize', ()=>{ clearTimeout(t); t=setTimeout(()=>this.resize(),200); }, {passive:true});
   }
-  if (!window.TweenMax){
-    note.textContent = 'Animation engine failed to load. Check network and refresh.';
-    console.error('TweenMax missing.');
-    spinBtn.disabled = true;
-    return;
+  resize(){
+    const wrap = this.canvas.parentElement; // .canvas-wrap
+    const css = Math.max(260, wrap.clientWidth);
+    const dpr = Math.max(1, Math.min(2, devicePixelRatio || 1));
+    this.canvas.width = Math.floor(css * dpr);
+    this.canvas.height= Math.floor(css * dpr);
+    this.canvas.style.width = css + 'px';
+    this.canvas.style.height= css + 'px';
+    this.radius = Math.min(this.canvas.width, this.canvas.height)/2 - 10*dpr;
+    this.cx = this.canvas.width/2; this.cy = this.canvas.height/2;
+    this.dpr = dpr;
+    this.draw();
   }
-  // Load Winwheel (with failsafes)
-  if (!window.Winwheel){
-    await loadScript('https://cdn.jsdelivr.net/npm/winwheel@1.0.1/dist/Winwheel.min.js').catch(()=>{});
-  }
-  if (!window.Winwheel){
-    await loadScript('https://unpkg.com/winwheel@1.0.1/Winwheel.min.js').catch(()=>{});
-  }
-  if (!window.Winwheel){
-    note.textContent = 'Spinner failed to load. Please refresh.';
-    console.error('Winwheel missing.');
-    spinBtn.disabled = true;
-    return;
-  }
+  draw(){
+    const ctx = this.ctx, N = this.segments.length, r = this.radius, cx=this.cx, cy=this.cy, dpr=this.dpr;
+    ctx.setTransform(1,0,0,1,0,0);
+    ctx.clearRect(0,0,this.canvas.width,this.canvas.height);
+    ctx.save();
+    // offset so angle 0 is at top (pointer)
+    const offset = -Math.PI/2 + this.rotation;
+    const slice = 2*Math.PI/N;
+    for(let i=0;i<N;i++){
+      const a0 = offset + i*slice;
+      const a1 = a0 + slice;
+      // wedge
+      ctx.beginPath();
+      ctx.moveTo(cx,cy);
+      ctx.arc(cx,cy,r,a0,a1,false);
+      ctx.closePath();
+      ctx.fillStyle = this.segments[i].color;
+      ctx.fill();
+      ctx.lineWidth = 2*dpr;
+      ctx.strokeStyle = this.strokeColor;
+      ctx.stroke();
 
-  buildWheel();
-  alreadySpun() ? disableSpinUI() : enableSpinUI();
-  spinBtn.addEventListener('click', spin);
-  if (location.hash === '#reset'){ localStorage.removeItem('sw_spin'); enableSpinUI(); }
-})();
-
-function buildWheel(){
-  const wrap = document.querySelector('.canvas-wrap');
-  const canvas = document.getElementById('wheel');
-  const cssSize = Math.max(260, wrap.clientWidth);
-  const dpr = Math.max(1, Math.min(2, window.devicePixelRatio || 1));
-
-  canvas.width = Math.floor(cssSize * dpr);
-  canvas.height = Math.floor(cssSize * dpr);
-  canvas.style.width = cssSize + 'px';
-  canvas.style.height = cssSize + 'px';
-
-  const segments = prizes.map((t,i)=>({ fillStyle: colors[i], text: t, textFillStyle:"#5b5b66", strokeStyle:"#fff" }));
-  theWheel = new Winwheel({
-    canvasId:'wheel',
-    numSegments: segments.length,
-    outerRadius: (cssSize/2)-10,
-    textFontFamily:'Fredoka, Arial, sans-serif',
-    textAlignment:'outer',
-    textMargin: Math.max(14, cssSize*0.07),
-    segments,
-    pins:{ number: Math.round(cssSize/16), fillStyle:'#fff', outerRadius:2 },
-    animation:{
-      type:'spinToStop',
-      duration: prefersReduced?0.1:5,
-      spins: prefersReduced?1:6,
-      callbackFinished: announcePrize,
-      callbackSound: ()=>{ try{ tick.currentTime=0; tick.play(); }catch(e){} },
-      soundTrigger:'pin'
+      // text
+      ctx.save();
+      const mid = (a0+a1)/2;
+      ctx.translate(cx,cy);
+      ctx.rotate(mid);
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      const fontSize = Math.max(14*dpr, Math.min(26*dpr, r*0.10));
+      ctx.font = `bold ${fontSize}px Fredoka, Arial, sans-serif`;
+      ctx.fillStyle = this.textColor;
+      ctx.fillText(this.segments[i].text, r - Math.max(24*dpr, r*0.25), 0);
+      ctx.restore();
     }
-  });
-  const ctx = theWheel.ctx; ctx.setTransform(dpr,0,0,dpr,0,0); theWheel.draw();
-
-  let rz; addEventListener('resize', ()=>{ clearTimeout(rz); rz=setTimeout(buildWheel,200); }, {passive:true});
+    // inner hub
+    ctx.beginPath();
+    ctx.arc(cx,cy, r*0.72, 0, 2*Math.PI);
+    ctx.strokeStyle = 'rgba(255,255,255,.75)';
+    ctx.lineWidth = 4*dpr; ctx.stroke();
+    ctx.restore();
+  }
+  // deterministic spin to target index (0..N-1)
+  spinTo(index, {duration=4500, turns=6}={}){
+    if (prefersReduced) { this.rotation = this._angleForIndex(index); this.draw(); return Promise.resolve(); }
+    const start = performance.now();
+    const from = this.rotation;
+    // rotate so that index center ends at 0 (-π/2 offset handled in draw)
+    const to = this._normalize(from + turns*2*Math.PI + this._deltaToIndex(from, index));
+    return new Promise(res=>{
+      const step = (now)=>{
+        const t = Math.min(1, (now-start)/duration);
+        // easeOutCubic
+        const eased = 1 - Math.pow(1 - t, 3);
+        this.rotation = from + (to - from)*eased;
+        this.rotation = this._normalize(this.rotation);
+        this.draw();
+        if (t<1) requestAnimationFrame(step); else res();
+      };
+      requestAnimationFrame(step);
+    });
+  }
+  _normalize(a){ const two=2*Math.PI; return (a%two + two) % two; }
+  _angleForIndex(index){
+    const N = this.segments.length;
+    const slice = 2*Math.PI/N;
+    // center angle of the index measured from top (draw handles -π/2 offset)
+    return index*slice + slice/2;
+  }
+  _deltaToIndex(from, index){
+    // How far (radians) from current rotation to land index center at the pointer (top)
+    const target = this._angleForIndex(index);
+    const cur = this._normalize(from);
+    let delta = target - cur;
+    while (delta < 0) delta += 2*Math.PI;
+    return delta;
+  }
+  indicatedIndex(){
+    // Which segment is at the pointer right now
+    const N = this.segments.length;
+    const slice = 2*Math.PI/N;
+    // rotation maps so that angle at pointer is rotation%2π
+    const a = this._normalize(this.rotation);
+    return Math.floor(a / slice + 0.5) % N; // nearest center
+  }
 }
+
+/* --- boot wheel --- */
+const wheelCanvas = document.getElementById('wheel');
+const segments = prizes.map((text, i)=>({ text, color: colors[i] }));
+const wheel = new MiniWheel(wheelCanvas, segments);
 
 function pickIndex(){ return Math.floor(Math.random()*prizes.length); }
 
 function spin(){
-  if (alreadySpun() || theWheel.animation.spinning) return;
+  if (alreadySpun() || spinning) return;
   let index = pickIndex();
   if (force){
     const n = +force;
-    if (n>=1 && n<=prizes.length) index = n-1;
-    else {
-      const i = prizes.findIndex(p => p.toLowerCase() === String(force).toLowerCase());
-      if (i !== -1) index = i;
+    if (n>=1 && n<=prizes.length) index=n-1; else {
+      const i = prizes.findIndex(p=>p.toLowerCase() === String(force).toLowerCase());
+      if (i!==-1) index=i;
     }
   }
-  const segNum = index + 1;
-  theWheel.animation.stopAngle = theWheel.getRandomForSegment(segNum);
-  console.log('[spin] forced?', !!force, 'index:', index, 'segNum:', segNum, 'stopAngle:', theWheel.animation.stopAngle);
-  theWheel.startAnimation();
+  console.log('[spin] index:', index);
+  spinning = true; spinBtn.disabled = true; spinBtn.textContent = 'Spinning…';
+  wheel.spinTo(index, {duration: 4800, turns: 6}).then(()=>{
+    const i = index; // deterministic
+    const prize = prizes[i];
+    console.log('[finish] indicated:', prize);
+    winText.textContent = `🎉 ${prize}`;
+    winCode.textContent = "Code: " + couponCode();
+    winCode.hidden = false;
+    setSpun(); disableSpinUI(); spinning = false;
+  });
 }
-
-function announcePrize(){
-  const seg = theWheel.getIndicatedSegment();
-  console.log('[finish] rotationAngle:', theWheel.rotationAngle, 'indicated:', seg.text);
-  winText.textContent = `🎉 ${seg.text}`;
-  winCode.textContent = "Code: " + couponCode();
-  winCode.hidden = false;
-  setSpun(); disableSpinUI();
-}
+let spinning = false;
+spinBtn.addEventListener('click', spin);
 
 winCode.addEventListener('click', async ()=>{
   try{
@@ -408,7 +418,9 @@ winCode.addEventListener('click', async ()=>{
   }catch{}
 });
 
-/* Dev helper for probability sanity check */
+(function initDay(){ alreadySpun() ? disableSpinUI() : enableSpinUI(); })();
+
+/* Dev helper */
 window.testSpins = function(n=1000){
   const counts = Object.fromEntries(prizes.map(p=>[p,0]));
   for(let i=0;i<n;i++){ counts[prizes[Math.floor(Math.random()*prizes.length)]]++; }
@@ -417,8 +429,6 @@ window.testSpins = function(n=1000){
 
 /* Utils */
 function couponCode(){ const s="ABCDEFGHJKLMNPQRSTUVWXYZ23456789"; let out="SWEET-"; for(let i=0;i<5;i++) out+=s[Math.floor(Math.random()*s.length)]; return out; }
-function domReady(){ return new Promise(r=>{ if (document.readyState!=='loading') r(); else addEventListener('DOMContentLoaded', r, {once:true}); }); }
-function loadScript(src){ return new Promise((res,rej)=>{ const s=document.createElement('script'); s.src=src; s.defer=true; s.onload=()=>res(true); s.onerror=rej; document.head.appendChild(s); }); }
 </script>
 </body>
 </html>
