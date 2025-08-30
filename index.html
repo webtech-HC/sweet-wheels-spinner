@@ -88,25 +88,35 @@ h1{font-family:Fredoka,system-ui,Arial,sans-serif;font-size:clamp(1.6rem,4vw,2.4
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/2.1.3/TweenMax.min.js" integrity="sha512-58H8hNtFZgJrFGh8VxBz4C4N9GJ2z8Qh6u2X6xU5iBNkWzA8FcJ6r9tWkGNT2l5m6ZzC2Kic4qK2C6cYcZ7Yxw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
   <!-- Winwheel.js (classic build) -->
   <script src="https://cdn.jsdelivr.net/npm/winwheel@1.0.1/dist/Winwheel.min.js"></script>
-<script>
-const prizes = ["10% OFF","Free Topping","$1 Off Drink","BOGO 50%","Mystery Sweet"];
-const colors = ["#F8B8C9","#BFEEDF","#BFD6FF","#DCC6FF","#FFE3A1"];
-const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-const tick = new Audio('https://cdn.jsdelivr.net/gh/terkelg/experiments@master/sounds/tick.mp3'); tick.volume = 0.2;
 
-let theWheel; // current instance
+  <script>
+let prizes = [], codePrefixes = [];
 
-function buildWheel() {
-  // 1) size & DPR
-  const wrap = document.querySelector('.canvas-wrap');
-  const canvas = document.getElementById('wheel');
-  const cssSize = Math.max(260, wrap.clientWidth);               // >=260px
-  const dpr = Math.max(1, Math.min(2, window.devicePixelRatio || 1)); // cap DPR to 2 for perf
+async function loadPrizes(){
+  try{
+    const res = await fetch('./prizes.json', {cache:'no-cache'}); // same-origin on GH Pages
+    const data = await res.json();
+    prizes = data.prizes.flatMap(p => Array(p.weight).fill(p.label)); // weights -> array
+    codePrefixes = data.prizes.map(p => p.codePrefix);
+  }catch(e){
+    prizes = ["10% OFF","Free Topping","$1 Off Drink","BOGO 50%","Mystery Sweet"];
+    codePrefixes = ["TEN","TOP","D1","B50","MYS"];
+  }
+}
+function couponCode(prefix="SWEET"){
+  const s="ABCDEFGHJKLMNPQRSTUVWXYZ23456789"; let out = prefix+"-";
+  for(let i=0;i<5;i++) out += s[Math.floor(Math.random()*s.length)];
+  return out;
+} (async function init(){ await loadPrizes(); buildWheel(); /* then wire listeners */ })();
 
-  canvas.width  = Math.floor(cssSize * dpr);
-  canvas.height = Math.floor(cssSize * dpr);
-  canvas.style.width = cssSize + 'px';
-  canvas.style.height = cssSize + 'px';
+function announcePrize(){
+  const seg = theWheel.getIndicatedSegment();
+  winText.textContent = `🎉 ${seg.text}`;
+  const prefixMap = { "10% OFF":"TEN","Free Topping":"TOP","$1 Off Drink":"D1","BOGO 50%":"B50","Mystery Sweet":"MYS" };
+  winCode.textContent = "Code: " + couponCode(prefixMap[seg.text] || "SWEET");
+  winCode.hidden = false;
+  setSpun(); disableSpinUI();
+}
 
   // 2) segments
   const segments = prizes.map((t,i)=>({ fillStyle: colors[i], text: t, textFillStyle: "#5b5b66", strokeStyle: "#fff" }));
